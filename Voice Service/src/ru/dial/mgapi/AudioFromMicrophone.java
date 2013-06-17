@@ -64,7 +64,6 @@ public class AudioFromMicrophone {
 	 * @throws LineUnavailableException
 	 */
 	public  void captureFromMicrophone() throws LineUnavailableException{
-		
 	
 	if (!AudioSystem.isLineSupported(info)) {
 	    	throw new LineUnavailableException("Is Line not Supported: " + info);
@@ -79,8 +78,12 @@ public class AudioFromMicrophone {
 	
 		Thread t = new Thread (new CaptureThread());
 		t.start();
+		
 	}
 	
+	/**
+	 * Stop capture from microphone
+	 */
 	public void stopCapture(){
 		line.stop();
 		line.close();

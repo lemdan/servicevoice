@@ -1,6 +1,5 @@
 package ru.dial.mgapi;
 
-import javax.sound.sampled.LineUnavailableException;
 
 public class Test {
 
@@ -12,7 +11,7 @@ public class Test {
 		AudioFromMicrophone a = new AudioFromMicrophone();
 		a.captureFromMicrophone();
 		try {
-			Thread.currentThread().sleep(5*1000);
+			Thread.currentThread().sleep(10*1000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -21,7 +20,8 @@ public class Test {
 		a.stopCapture();
 		
 		SendDataToGoogle s = new SendDataToGoogle();
-		System.out.println(s.sendFLACStream(a.getOS()));
+		String[] str = s.parseResponse(s.sendFLACStream(a.getOS()));
+		System.out.print(str[0] + "          " + str[1]);
 	}
 
 }
