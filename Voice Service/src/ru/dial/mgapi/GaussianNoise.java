@@ -15,7 +15,7 @@ public class GaussianNoise {
 	}
 	
 	//The average value of a random variable
-	public  float averageValue(float[] amplitudeSilence){
+	public  float averageValue(byte[] amplitudeSilence){
 		average = 0;
 		for (float a: amplitudeSilence){
 			average += a;
@@ -29,7 +29,7 @@ public class GaussianNoise {
 				
 	}
 	
-	public float normalDistribution(float[] amplitudeSilence){
+	public float normalDistribution(byte[] amplitudeSilence){
 		for (float a: amplitudeSilence){
 			normal += Math.pow((a - average), 2);
 		}
@@ -48,7 +48,7 @@ public class GaussianNoise {
 		return false;
 	}
 	
-	public int getA(float[] amplitude){
+	public int getA(byte[] amplitude){
 		int countOne = 0;
 		for (float a: amplitude){
 			if (getDistance(a))
