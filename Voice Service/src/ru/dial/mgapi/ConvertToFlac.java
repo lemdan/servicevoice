@@ -17,8 +17,8 @@ import javax.sound.sampled.TargetDataLine;
  * @author Lemdan
  */
 public class ConvertToFlac {
-	
-
+	private static int SILENCE_FRAMES = 5;
+	private static int BYTES_IN_AUDIO_DATA = 128;
 	/**
 	 * This method get data from microphone and then convert them into output stream to FLAC format
 	 * 
@@ -29,51 +29,38 @@ public class ConvertToFlac {
 		float energy = 0;
 		float max = 0;
 		boolean stop = true;
-		byte[] data = new byte[line.getBufferSize() / 5];
-		System.out.println(data[10]);
+		byte[] audioData = new byte[BYTES_IN_AUDIO_DATA];
 		int countSilence = 0;
-		GaussianNoise gn = new GaussianNoise(700.0F, 700.0F);
+		float averageSilenceFrames[] = new float[SILENCE_FRAMES];
+		float normalSilenceFrames[] = new float[SILENCE_FRAMES];
+		float averengThresh = 0;
+		float normalThresh = 0;
 		while( stop){
 			
-			System.out.println(line.read(data, 0, data.length));
-			/*for(int i = 0; i < data.length ;i++){
-				if(data[i] > max)
-					max = Math.abs(data[i]);
-				energy += (data[i]*data[i]);
-			}*/
+			line.read(audioData, 0, audioData.length);
 			
-		//System.out.println(Calendar.getInstance().getTime() +"----------"+ energy/(line.getBufferSize() / 5) + "---------" + max);
-		//energy = 0;
-		//max =0;
 			
-			WaveData wd = new WaveData();
-			float[] audioData = wd.extractFloatDataFromAmplitudeByteArray(line.getFormat(), data);
-			/*for(int i = 0; i < audioData.length ;i++){
-				if(data[i] > max)
-					max = audioData[i];
-				energy += (audioData[i]*audioData[i]);
+			
+			if (countSilence < SILENCE_FRAMES)
+			{
+				
+				averageSilenceFrames[countSilence] = GaussianNoise.averageValue(audioData);
+				normalSilenceFrames[countSilence] = GaussianNoise.normalDistribution(audioData, averageSilenceFrames[countSilence]);
+				countSilence++;
+				if (countSilence == SILENCE_FRAMES){
+					for(int i = 0; i <= SILENCE_FRAMES - 1; i++){
+						averengThresh += averageSilenceFrames[i];
+						normalThresh += normalSilenceFrames[i];
+					}
+					
+				}
+			}else{
+			
+			int a = GaussianNoise.getA(audioData, averengThresh/SILENCE_FRAMES, normalThresh/SILENCE_FRAMES);
+				
+					System.out.println("----------------------------------" + a);
 			}
-			System.out.println(Calendar.getInstance().getTime() +"----------"+ energy/(line.getBufferSize() / 5) + "---------" + max);
-			energy = 0;
-			max =0;*/
-			
-			//count++;
-			
-			//if ((count > 1) && (count < 3)){
-			
-			//gn.averageValue(audioData);
-			//gn.normalDistribution(audioData);
-			//}
-			//if (count > 5)
-			int a = gn.getA(audioData);
-				System.out.println(a + "======== " + gn.getAverage() + "============ " + gn.getNormal());
-				if (a == 0){
-					countSilence++;
-				}
-				else countSilence = 0;
-				if (countSilence == 11){
-					System.out.println("STOP----------------------------------");
-				}
+				
 			
 		}
 		AudioInputStream ais = new AudioInputStream(line);
