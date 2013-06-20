@@ -1,22 +1,10 @@
 package ru.dial.mgapi;
 
 public class GaussianNoise {
-	private float average;
-	private float normal;
-	
-	public GaussianNoise(){
-		this.average = 0.0F;
-		this.normal = 1.0F;
-	}
-	
-	public GaussianNoise(float average, float normal){
-		this.average = average;
-		this.normal = normal;
-	}
 	
 	//The average value of a random variable
-	public  float averageValue(float[] amplitudeSilence){
-		average = 0;
+	public static float averageValue(byte[] amplitudeSilence){
+		float average = 0;
 		for (float a: amplitudeSilence){
 			average += a;
 		}
@@ -29,7 +17,8 @@ public class GaussianNoise {
 				
 	}
 	
-	public float normalDistribution(float[] amplitudeSilence){
+	public static float normalDistribution(byte[] amplitudeSilence, float average){
+		float normal = 0;
 		for (float a: amplitudeSilence){
 			normal += Math.pow((a - average), 2);
 		}
@@ -41,28 +30,21 @@ public class GaussianNoise {
 		}
 	}
 	
-	private boolean getDistance(float x){
+	private static boolean getDistance(byte x, float average, float normal){
 
 		if (Math.abs(x - average)/normal > 3)
 			return true;
 		return false;
 	}
 	
-	public int getA(float[] amplitude){
+	public static int getA(byte[] amplitude, float average, float normal){
 		int countOne = 0;
-		for (float a: amplitude){
-			if (getDistance(a))
+		for (byte a: amplitude){
+			if (getDistance(a, average, normal))
 				countOne++;
 		}
 		return countOne;
 	}
 
-	public float getAverage() {
-		return average;
-	}
-
-	public float getNormal() {
-		return normal;
-	}
 
 }

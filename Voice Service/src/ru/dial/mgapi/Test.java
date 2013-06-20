@@ -12,6 +12,7 @@ public class Test {
 		a.captureFromMicrophone();
 		try {
 			Thread.currentThread().sleep(10*1000);
+			ConvertToFlac.stop = false;
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -19,9 +20,9 @@ public class Test {
 		System.out.println("STOP");
 		a.stopCapture();
 		
-		SendDataToGoogle s = new SendDataToGoogle();
-		String[] str = s.parseResponse(s.sendFLACStream(a.getOS()));
-		System.out.print(str[0] + "          " + str[1]);
+		//SendDataToGoogle s = new SendDataToGoogle();
+		//String[] str = s.parseResponse(s.sendFLACStream(a.getOS()));
+		//System.out.print(str[0] + "          " + str[1]);
 	}
 
 }
